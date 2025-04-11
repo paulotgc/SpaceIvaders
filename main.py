@@ -26,8 +26,19 @@ playerX_change = 0
 enemyImg = pygame.image.load('enemy.png')
 enemyX = random.randint(0, 800)
 enemyY = random.randint(50 , 150)
-enemyX_change = 3
+enemyX_change = 2
 enemyY_change = 40
+
+# bullet
+# ready - para ativar o tiro na screen
+#Fire - movimento da bala
+
+bulletImg = pygame.image.load('bullet.png')
+bulletX = 0
+bulletY = 480
+bulletX_change = 0
+bulletY_change = 10
+bullet_state = 'ready'
 
 # função jogador
 def player(x, y):
@@ -36,6 +47,11 @@ def player(x, y):
 # Função inimigo
 def enemy(x, y):
     screen.blit(enemyImg, (x, y))
+
+def fire_bullet(x,y):
+    global bullet_state
+    bullet_state = 'fire'
+    screen.blit(bulletImg,(x + 16, y + 10))
 
 
 # game loop
@@ -57,6 +73,8 @@ while running:
                 playerX_change = -5
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
+            if event.key == pygame.K_SPACE:
+                fire_bullet(playerX, bulletY)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -77,11 +95,16 @@ while running:
     enemyX += enemyX_change
 
     if enemyX <= 0:
-        enemyX_change = 4
+        enemyX_change = 2
         enemyY += enemyY_change
     elif enemyX >= 736:
-        enemyX_change = -4
+        enemyX_change = -2
         enemyY += enemyY_change
+
+    # movimento da bullet
+    if bullet_state in 'fire':
+        fire_bullet(playerX, bulletY)
+        bulletY -= bulletY_change
 
     player(playerX, playerY)
     enemy(enemyX, enemyY)
