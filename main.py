@@ -74,7 +74,10 @@ while running:
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
             if event.key == pygame.K_SPACE:
-                fire_bullet(playerX, bulletY)
+                if bullet_state is 'ready':
+                    # corrige para a nave se mover e a bala não ir junto com a nave
+                    bulletX = playerX
+                    fire_bullet(bulletX, bulletY)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -102,8 +105,11 @@ while running:
         enemyY += enemyY_change
 
     # movimento da bullet
+    if bulletY <= 0:
+        bulletY = 480
+        bullet_state = 'ready'
     if bullet_state in 'fire':
-        fire_bullet(playerX, bulletY)
+        fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
 
     player(playerX, playerY)
